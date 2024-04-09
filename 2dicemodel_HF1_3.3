@@ -1,0 +1,76 @@
+var dobás = function () {
+  var kocka1 = (categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                             vs: [1, 2, 3, 4, 5, 6]}));
+  var kocka2 = (categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                             vs: [1, 2, 3, 4, 5, 6]}));
+  return kocka1 + kocka2; 
+};
+
+var inferencia = Infer({model: dobás, method: 'enumerate'});
+
+var valószínűség = expectation(inferencia, function(összeg) {
+  return összeg >= 4 ? 1 : 0;
+});
+
+print('Probability of at least 4 as total of 2 dice rolled:');
+print('-> Set "2 dice roll" model');
+print('-> Add "Optimal case" criteria');
+print('-> Compare');
+print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
+print('The probabilty in case of 4 Non-optimal case (math model takes [d(1)=1,d(2)=1] scenario as 2 cases) = ' + ((36-4)/36).toFixed(4));
+print('The probabilty in case of 3 Non-optimal case (algorithmic model takes [d(1)=1,d(2)=1] scenario as 1 case) = ' + valószínűség.toFixed(4));
+print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
+
+var dobás = function () {
+  var kocka1 = categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                            vs: [1, 2, 3, 4, 5, 6]});
+  var kocka2 = categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                            vs: [1, 2, 3, 4, 5, 6]});
+  return [kocka1,kocka2];
+}
+var kedvező_dobás = function () {
+  var kocka1 = categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                            vs: [1, 2, 3, 4, 5, 6]});
+  var kocka2 = categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                            vs: [1, 2, 3, 4, 5, 6]});
+  condition(kocka1 + kocka2 >= 4);
+  return [kocka1,kocka2];
+}
+var kedvezőtlen_dobás = function () {
+  var kocka1 = categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                            vs: [1, 2, 3, 4, 5, 6]});
+  var kocka2 = categorical({ps: [1/6, 1/6, 1/6, 1/6, 1/6, 1/6], 
+                            vs: [1, 2, 3, 4, 5, 6]});
+  condition(kocka1 + kocka2 < 4);
+  return [kocka1,kocka2];
+}
+
+var összes = Infer({method: 'enumerate'}, dobás);
+var kedvező = Infer({method: 'enumerate'}, kedvező_dobás);
+var kedvezőtlen = Infer({method: 'enumerate'}, kedvezőtlen_dobás);
+
+
+print('Sample set')
+viz.auto(összes);
+
+print('Optimal cases')
+viz.auto(kedvező);
+
+print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
+
+print('Optimal cases:')
+viz.table(kedvező)
+      
+print('Non-optimal cases:')
+viz.table(kedvezőtlen)
+
+print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
+
+var sokdobás = repeat(1000, dobás); 
+print('Example:Probabilities at 1000 roll:');
+viz.heatMap(sokdobás);
+viz.auto(sokdobás);
+viz.table(sokdobás);
+viz.hist(sokdobás);
+
+
