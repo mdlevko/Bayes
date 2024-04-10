@@ -1,0 +1,28 @@
+print('')
+print('Sample set = {0, 1, 2, 3}.')
+print('X = 3 -> Highest possibility | Y + Z = 4.') //Highest variability of choosing options for Y,Z.
+print('X = 2 -> Possible | Y + Z = 5.')
+print('X = 1 -> Lowest possibility | Y + Z = 6.')
+print('X = 0 -> No possibility | Y + Z = 7.') //Impossible by choosing one value from "Sample set".
+
+var model = function() {
+
+  var values = [0, 1, 2, 3];
+  
+  var X = uniformDraw(values);
+  var Y = uniformDraw(values);
+  var Z = uniformDraw(values);
+  
+  var W = X + Y + Z;
+  condition(W == 7);
+  
+  return X;
+ 
+};
+
+// Az eloszlás generálása és vizualizálása
+var distribution = Infer({method: 'enumerate'}, model);
+
+// Az X változó eloszlásának megjelenítése
+viz.auto(distribution);
+viz.table(distribution);
