@@ -70,4 +70,4 @@ var productOfMarginals = probRadio * probAlarm;
 print('Checking if P(JointRA) = P(Radio=1) * P(Alarm=1): ' + probjointRA + ' = ' + probRadio + ' * ' + probAlarm + ' = ' + productOfMarginals.toFixed(6) 
 + '⚡');
 var conditionalIndependence = (probjointRA === productOfMarginals) ? "Yes" : "No";
-print('Conditional Independence between Radio and Alarm? ' + conditionalIndependence);
+print('Conditional Independence? ' + conditionalIndependence);
