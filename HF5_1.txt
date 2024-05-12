@@ -1,58 +1,73 @@
+print('The Earthquake Model')
 var earthquakeModel = function() {
   var earthquake = flip(0.1);
-  var radioAnnouncement = earthquake ? flip(0.9) : flip(0.01);
-  var carAlarm = earthquake ? flip(0.4) : flip(0.05);
+  var Alarm = earthquake ? flip(0.4) : flip(0.05);
+  var Radio = earthquake ? flip(0.9) : flip(0.01);
   return {
     Earthquake: earthquake,
-    Radio: radioAnnouncement,
-    Alarm: carAlarm
+    Radio: Radio,
+    Alarm: Alarm
   };
 };
 
 var distribution = Infer({method: 'enumerate'}, earthquakeModel);
 viz.table(distribution);
 print('')
-print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
-print('')
 viz.auto(distribution);
-viz.marginals(distribution);
-
+print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
+print('Prob Analysis')
 var distribution = Infer({method: 'enumerate'}, earthquakeModel);
 
 var probR = Infer({method: 'enumerate'}, function() {
   var outcome = earthquakeModel();
-  return outcome.Radio;
+  return {Radio: outcome.Radio};
 });
+viz.table(probR)
+var probR = Infer({method: 'enumerate'}, function() {
+  var outcome = earthquakeModel();
+  return outcome.Radio
+});
+
 
 var probA = Infer({method: 'enumerate'}, function() {
   var outcome = earthquakeModel();
-  return outcome.Alarm;
+   return {Alarm: outcome.Alarm};
+});
+viz.table(probA)
+var probA = Infer({method: 'enumerate'}, function() {
+  var outcome = earthquakeModel();
+   return outcome.Alarm
 });
 
 var jointRA = Infer({method: 'enumerate'}, function() {
   var outcome = earthquakeModel();
-  condition(outcome.Radio && outcome.Alarm);
-  return "Joint R=1 and A=1";
+  return (outcome.Radio && outcome.Alarm) ? true : false;
 });
+var jointRA = Infer({method: 'enumerate'}, function() {
+  var outcome = earthquakeModel();
+  return {JointRA: outcome.Radio && outcome.Alarm}
+});
+viz.table(jointRA)
 
-print("Calculated Marginal and Joint Probabilities:");
-print("P(Radio=1) = " + expectation(probR).toFixed(4));
-print("P(Alarm=1) = " + expectation(probA).toFixed(4));
-print("P(Radio=1, Alarm=1) = " + expectation(jointRA).toFixed(4));
+print('')
+viz.marginals(distribution);
 
-var productOfMarginals = expectation(probR) * expectation(probA);
-print("Expected Product of Marginals P(R=1) * P(A=1): " + productOfMarginals.toFixed(4));
+print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
 
-print("Checking if P(Radio=1, Alarm=1) = P(Radio=1) * P(Alarm=1):");
-print("0.03645 = 0.099 * 0.085 = " + (0.099 * 0.085).toFixed(5) + " (Expected)");
-print("Actual Joint Probability = " + expectation(jointRA).toFixed(5));
-print("Conditional Independence Radio and Alarm? " + (expectation(jointRA).toFixed(5) === (0.099 * 0.085).toFixed(5) ? "No" : "Yes"));
+print('Calculated Marginal and Joint Probabilities:');
+print('P(Radio=1) = ' + expectation(probR).toFixed(6));
+print('P(Alarm=1) = ' + expectation(probA).toFixed(6));
+print('P(Radio=1, Alarm=1) = ' + (expectation(probR) * expectation(probA)).toFixed(6));
 
+print('')
+print('Summary:')
 
+var probjointRA = 0.03645;
+var probRadio = 0.099;
+var probAlarm = 0.085;
 
-
-
-
-
-
-
+var productOfMarginals = probRadio * probAlarm;
+print('Checking if P(JointRA) = P(Radio=1) * P(Alarm=1): ' + probjointRA + ' = ' + probRadio + ' * ' + probAlarm + ' = ' + productOfMarginals.toFixed(6) 
++ '⚡');
+var conditionalIndependence = (probjointRA === productOfMarginals) ? "No" : "Yes";
+print('Conditional Independence between Radio and Alarm? ' + conditionalIndependence);
