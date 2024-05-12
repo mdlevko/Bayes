@@ -55,13 +55,13 @@ viz.marginals(distribution);
 print('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨')
 
 print('Calculated Marginal and Joint Probabilities:');
+print('')
 print('P(Radio=1) = ' + expectation(probR).toFixed(6));
 print('P(Alarm=1) = ' + expectation(probA).toFixed(6));
 print('P(Radio=1, Alarm=1) = ' + (expectation(probR) * expectation(probA)).toFixed(6));
 
 print('')
 print('Summary:')
-
 var probjointRA = 0.03645;
 var probRadio = 0.099;
 var probAlarm = 0.085;
@@ -69,5 +69,5 @@ var probAlarm = 0.085;
 var productOfMarginals = probRadio * probAlarm;
 print('Checking if P(JointRA) = P(Radio=1) * P(Alarm=1): ' + probjointRA + ' = ' + probRadio + ' * ' + probAlarm + ' = ' + productOfMarginals.toFixed(6) 
 + '⚡');
-var conditionalIndependence = (probjointRA === productOfMarginals) ? "No" : "Yes";
+var conditionalIndependence = (probjointRA === productOfMarginals) ? "Yes" : "No";
 print('Conditional Independence between Radio and Alarm? ' + conditionalIndependence);
