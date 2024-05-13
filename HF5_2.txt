@@ -1,21 +1,13 @@
 print('Reference Model 1')
-var model = function() {
-  
+var model = function() {  
   var i = categorical({ps:[0.5,0.5], 
                             vs: ['modell', 'null modell']});
-   
-  
-  var p = (i==="modell") ? beta(10,1) : beta(50,50);
-  
+  var p = (i==="modell") ? beta(10,1) : beta(50,50);  
     observe(Binomial({p : p, n: 20}), 15);
-
 return {i: i, p : p};
 };
-
 var output = Infer({model: model, samples: 1000, method: 'MCMC'});
-
 viz.marginals(output);
-
 print('Model 1')
 var totalSeagulls = 20;
 var seagullModel = function() {
@@ -42,12 +34,9 @@ var seagullModel = function() {
     Sirályok: observedSeagullsOnGravel
   };
 };
-
 var posterior = Infer({model: seagullModel, samples: 10000, method: 'MCMC'});
 viz.auto(posterior);
-
 print('Model 2')
-
 var tengerpart = function() {
   var p_equal = 0.5;
   return flip(p_equal) ? "Sóder" : "Homok";
