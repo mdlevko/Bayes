@@ -1,7 +1,26 @@
+print('Reference Model 1')
+var model = function() {
+  
+  var i = categorical({ps:[0.5,0.5], 
+                            vs: ['modell', 'null modell']});
+   
+  
+  var p = (i==="modell") ? beta(10,1) : beta(50,50);
+  
+    observe(Binomial({p : p, n: 20}), 15);
+
+return {i: i, p : p};
+};
+
+var output = Infer({model: model, samples: 1000, method: 'MCMC'});
+
+viz.marginals(output);
+
+print('Model 1')
 var totalSeagulls = 20;
 var seagullModel = function() {
   var modelType = categorical({ps: [0.5, 0.5], vs: ['null', 'Sóder']});  
-  var gravelProb = (modelType === "Sóder") ? beta(15, 5) : beta(50, 50);
+  var gravelProb = (modelType === "Sóder") ? beta(15, 1) : beta(50, 50);
   var observedSeagullsOnGravel = binomial({p: gravelProb, n: totalSeagulls});
   return {
     Pref: modelType,
@@ -15,7 +34,7 @@ viz.auto(posterior);
 var totalSeagulls = 20;
 var seagullModel = function() {
   var modelType = categorical({ps: [0.5, 0.5], vs: ['Homok', 'Sóder']});
-  var gravelProb = (modelType === "Sóder") ? beta(10,2) : beta(50,50);
+  var gravelProb = (modelType === "Sóder") ? beta(10,1) : beta(50,50);
   var observedSeagullsOnGravel = binomial({p: gravelProb, n: totalSeagulls});
   return {
     Pref: modelType,
@@ -26,3 +45,18 @@ var seagullModel = function() {
 
 var posterior = Infer({model: seagullModel, samples: 10000, method: 'MCMC'});
 viz.auto(posterior);
+
+print('Model 2')
+
+var tengerpart = function() {
+  var p_equal = 0.5;
+  return flip(p_equal) ? "Sóder" : "Homok";
+};
+var model = function() {
+  var i = categorical({ps: [0.5, 0.5], vs: ['model', 'null model']});
+  var p = (i === "model") ? beta(10, 1) : beta(50, 50);
+  observe(Binomial({p: p, n: 20}), 15);
+  return {i: i, p: p};
+};
+var output = Infer({model: model, samples: 1000, method: 'MCMC'});
+viz.marginals(output);
