@@ -85,7 +85,7 @@ var results =  [
         Probability: (pE1R1A1 + pE1R0A1).toFixed(2) 
     }
 ];
-viz.bar(results);  
+viz.auto(results);  
 print('')
 print('P(E=1, R=1, A=1) / P(E=1): ' + (expectation(distribution, function(s) { return s.E && s.R && s.A ? 1 : 0; }) / expectation(distribution, function(s) { return s.E ? 1 : 0; })).toFixed(2));
 print('P(E=1, R=1, A=0) / P(E=1): ' + (expectation(distribution, function(s) { return s.E && s.R ? 1 : 0; }) / expectation(distribution, function(s) { return s.E ? 1 : 0; })).toFixed(2));
